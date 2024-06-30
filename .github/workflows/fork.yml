@@ -1,7 +1,9 @@
 name: Fork life
 
 on:
-  workflow_dispatch:
+  schedule:
+    # Runs every hour
+    - cron: '0 * * * *'
 
 jobs:
   run-script:
