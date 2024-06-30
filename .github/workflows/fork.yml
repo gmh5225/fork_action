@@ -50,6 +50,7 @@ jobs:
         'ida plugin',
         'Decompiler',
         'obfuscation',
+        'patchguard',
         'ide+language%3AC%2B%2B',
         'RAT+language%3AC%2B%2B'
         ]
@@ -92,7 +93,7 @@ jobs:
                 repo_name = repo['name']
                 print(f'Processing https://github.com/{owner}/{repo_name}')
                 fork_repository(owner, repo_name)
-                time.sleep(3)
+                time.sleep(30)
 
         main()
         EOF
