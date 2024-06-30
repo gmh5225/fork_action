@@ -35,7 +35,16 @@ jobs:
         TOKEN = os.getenv('GITHUB_TOKEN_FOR_BOT')
 
         # List of keywords you are interested in
-        KEYWORDS = ['anti cheat', 'LLVM']
+        KEYWORDS = [
+        'anti cheat', 
+        'LLVM', 
+        'android cheat', 
+        'windows driver',
+        'debugger',
+        'ida plugin',
+        'Decompiler',
+        'obfuscation'
+        ]
 
         def search_repositories():
             headers = {
