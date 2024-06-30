@@ -44,7 +44,9 @@ jobs:
         'debugger',
         'ida plugin',
         'Decompiler',
-        'obfuscation'
+        'obfuscation',
+        'ide+language%3AC%2B%2B',
+        'RAT+language%3AC%2B%2B'
         ]
 
         def search_repositories():
