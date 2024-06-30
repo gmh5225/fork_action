@@ -1,0 +1,83 @@
+name: Fork life
+
+on:
+  schedule:
+    # Runs every hour
+    - cron: '0 * * * *'
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests schedule
+
+    - name: Run script
+      env:
+        GITHUB_TOKEN_FOR_BOT: ${{ secrets.TOKEN_FOR_BOT }}
+      run: |
+        python <<EOF
+        import requests
+        import os
+        import time
+
+        # GitHub username and Personal Access Token
+        USERNAME = 'gmh5225'
+        # Set the GITHUB_TOKEN_FOR_BOT environment variable
+        TOKEN = os.getenv('GITHUB_TOKEN_FOR_BOT')
+
+        # List of keywords you are interested in
+        KEYWORDS = ['anti cheat', 'LLVM']
+
+        def search_repositories():
+            headers = {
+                'Authorization': f'token {TOKEN}'
+            }
+            repositories = []
+
+            for keyword in KEYWORDS:
+                url = f'https://api.github.com/search/repositories?q={keyword}&sort=updated&order=desc'
+                try:
+                    response = requests.get(url, headers=headers)
+                    response.raise_for_status()  # Check response status code
+                    results = response.json().get('items', [])
+                    repositories.extend(results)
+                except requests.exceptions.RequestException as e:
+                    print(f"Failed to fetch repositories for keyword: {keyword}. Error: {e}")
+
+            return repositories
+
+        def fork_repository(owner, repo):
+            url = f'https://api.github.com/repos/{owner}/{repo}/forks'
+            headers = {
+                'Authorization': f'token {TOKEN}'
+            }
+            response = requests.post(url, headers=headers)
+            if response.status_code == 202:
+                print(f'Successfully forked {owner}/{repo}')
+            else:
+                print(f'Failed to fork {owner}/{repo}')
+
+        def main():
+            repositories = search_repositories()
+            for repo in repositories:
+                owner = repo['owner']['login']
+                if owner == USERNAME:
+                    continue
+                repo_name = repo['name']
+                print(f'Processing https://github.com/{owner}/{repo_name}')
+                fork_repository(owner, repo_name)
+                time.sleep(3)
+
+        main()
+        EOF
