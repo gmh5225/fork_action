@@ -39,7 +39,7 @@ jobs:
 
         # List of keywords you are interested in
         KEYWORDS = [
-        'game cheat',
+        'game cheat+language%3AC%2B%2B',
         'anti cheat', 
         'LLVM', 
         'android cheat', 
